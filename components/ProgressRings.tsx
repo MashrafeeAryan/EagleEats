@@ -10,8 +10,12 @@ import Svg, { Circle } from 'react-native-svg';
 // Enable the <Circle> element to be animated using React Native's Animated API
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-// Get the device's screen width so we can prevent popups from going off-screen
+// Get the device's screen width so we can calculate a responsive size
 const screenWidth = Dimensions.get('window').width;
+
+// Calculate a responsive ring size (80% of screen width, max 300px)
+const ringSize = Math.min(screenWidth * 0.6, 300);
+const dynamicStrokeWidth = ringSize * 0.05; // Stroke is 5% of ring size
 
 // Define the nutrition metrics: each object contains info about one nutrient
 const metrics = [
@@ -22,7 +26,7 @@ const metrics = [
 ];
 
 // This component displays animated rings and handles user interaction
-const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
+const ProgressRings = ({ size = ringSize, strokeWidth = dynamicStrokeWidth }) => {
   // Calculate the center of the SVG canvas
   const center = size / 2;
 
@@ -45,19 +49,11 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
   // When the component is mounted, animate all rings based on nutrient progress
   useEffect(() => {
     const anims = metrics.map((metric, index) => {
-      // Calculate the radius for this specific ring
       const radius = baseRadius - index * (strokeWidth + 4);
-
-      // Calculate the total circumference (length) of the ring
       const circumference = 2 * Math.PI * radius;
-
-      // Calculate the percentage of the goal that has been reached
       const percent = Math.min(metric.value / metric.goal, 1);
-
-      // Calculate the part of the circle that should remain hidden
       const offset = circumference * (1 - percent);
 
-      // Return an animation that transitions from full offset to actual offset
       return Animated.timing(animations[index], {
         toValue: offset,
         duration: 1000,
@@ -65,7 +61,6 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
       });
     });
 
-    // Play animations in sequence with slight delay between them
     Animated.stagger(200, anims).start();
   }, []);
 
@@ -90,18 +85,14 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
   const popupWidth = 130;
 
   return (
-    // Pressable allows us to close the popup when tapping outside
-    <Pressable onPress={handleBackgroundPress} style={styles.container}>
-      {/* SVG canvas to draw the circular rings */}
+    <Pressable onPress={handleBackgroundPress} style={[styles.container, { width: size, height: size }]}>
       <Svg width={size} height={size}>
         {metrics.map((metric, index) => {
-          // Calculate radius and circumference for this ring
           const radius = baseRadius - index * (strokeWidth + 4);
           const circumference = 2 * Math.PI * radius;
 
           return (
             <React.Fragment key={metric.key}>
-              {/* Draw static gray background ring */}
               <Circle
                 stroke="#eee"
                 cx={center}
@@ -111,8 +102,6 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
                 fill="none"
                 transform={`rotate(-90 ${center} ${center})`}
               />
-
-              {/* Draw animated colored progress ring */}
               <AnimatedCircle
                 stroke={metric.color}
                 cx={center}
@@ -125,8 +114,8 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
                 strokeLinecap="round"
                 transform={`rotate(-90 ${center} ${center})`}
                 onPress={(evt) => {
-                  evt.stopPropagation(); // Prevent closing popup
-                  handleRingPress(metric, evt); // Show popup
+                  evt.stopPropagation();
+                  handleRingPress(metric, evt);
                 }}
               />
             </React.Fragment>
@@ -134,13 +123,11 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
         })}
       </Svg>
 
-      {/* Show total calories in the center of the rings */}
       <View style={styles.centerText}>
         <Text style={styles.centerValue}>{metrics[0].value}</Text>
-        <Text style={styles.centerLabel}>of {metrics[0].goal} Calories</Text>
+        <Text style={styles.centerLabel}>of {metrics[0].goal}</Text>
       </View>
 
-      {/* Display popup when a ring is tapped */}
       {popup.visible && popup.metric && (
         <View
           style={[
@@ -168,11 +155,8 @@ const ProgressRings = ({ size = 250, strokeWidth = 12 }) => {
   );
 };
 
-// Define styles for layout and visual appearance
 const styles = StyleSheet.create({
   container: {
-    width: 250,
-    height: 250,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -208,5 +192,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// Make the ProgressRings component available for other files to import
 export default ProgressRings;
