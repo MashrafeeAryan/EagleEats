@@ -10,33 +10,51 @@ const Index = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       //
-        <View className="items-center">
-          <ProgressRings value={calories} goal={goal} />
+      <View className="items-center">
+        <ProgressRings value={calories} goal={goal} />
 
-          {/* Text aligned to left */}
-          <View className="w-full px-4 mt-2">
-            <Text className="text-left text-lg font-semibold">Your Nutrition Goals</Text>
-          </View>
+        {/* Text aligned to left */}
+        <View className="w-full px-4 mt-2">
+          <Text className="text-left text-lg font-semibold">
+            Your Nutrition Goals
+          </Text>
+        </View>
 
-          {/*ScrollView to make sure we can scroll horizontally */}
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="p-4">
+        {/*ScrollView to make sure we can scroll horizontally */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="p-4"
+        >
           {/*Nutrition Goals Boxes*/}
 
           {/*Get padding at the beginning */}
 
-          <View className="bg-gray-100 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#3498db] border-2">
-            
+          <View className="bg-gray-10 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#3498db] border-2">
+            <Text className="text-2xl font-bold text-[#3498db]">800</Text>
+            <Text className="text-xs text-gray-700">Daily Calories</Text>
+            <Text className="text-xs text-gray-500">of 2000</Text>
           </View>
-          <View className="bg-gray-100 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#e74c3c] border-2"></View>
-          <View className="bg-gray-100 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#9b59b6] border-2"></View>
-          <View className="bg-gray-100 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#f1c40f] border-2"></View>
-          
+          <View className="bg-gray-10 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#e74c3c] border-2">
+            <Text className="text-2xl font-bold text-[#e74c3c]">150</Text>
+            <Text className="text-xs text-gray-700">Daily Protein</Text>
+            <Text className="text-xs text-gray-500">of 2000</Text>
+          </View>
+          <View className="bg-gray-10 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#9b59b6] border-2">
+            <Text className="text-2xl font-bold text-[#9b59b6]">200</Text>
+            <Text className="text-xs text-gray-700">Daily Carbs</Text>
+            <Text className="text-xs text-gray-500">of 2000</Text>
+          </View>
+          <View className="bg-gray-10 rounded-xl p-4 mr-3 w-[120] h-[100] items-center justify-center border-[#f1c40f] border-2">
+            <Text className="text-2xl font-bold text-[#f1c40f]">800</Text>
+            <Text className="text-xs text-gray-700">Daily Fat</Text>
+            <Text className="text-xs text-gray-500">of 2000</Text>
+          </View>
+
           {/*Get padding at the end */}
-            <View style={{ width: 10 }} />
-          </ScrollView>
-         
-        </View>
-      
+          <View style={{ width: 10 }} />
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
