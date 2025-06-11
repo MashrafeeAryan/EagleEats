@@ -9,7 +9,7 @@ const Index = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      //
+      
       <View className="items-center">
         <ProgressRings value={calories} goal={goal} />
 
