@@ -80,7 +80,7 @@ const ProfileScreen = () => {
 
 				{/* MESSAGE */}
 				<Text className="mt-4 px-6 text-sm text-gray-800 text-center">
-					{/* “Hi User. You're on track 5/7 days this week. Keep it up!” */}
+					“Hi User. You're on track 5/7 days this week. Keep it up!”
 				</Text>
 			</ScrollView>
 		</SafeAreaView>
