@@ -1,5 +1,5 @@
-import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProgressRings from "@/components/ProgressRings";
 
@@ -7,6 +7,8 @@ const Index = () => {
   const calories = 900;
   const goal = 2000;
 
+  //To Change the background color of adjust Goals
+  const [pressed, setPressed] = useState(false)
   return (
     <SafeAreaView className="flex-1 bg-white">
       
@@ -54,6 +56,14 @@ const Index = () => {
           {/*Get padding at the end */}
           <View style={{ width: 10 }} />
         </ScrollView>
+        <View className="w-full px-4 items-end">
+          <TouchableOpacity className={`rounded-md p-2 border-[#f8d04a] border-2 ${
+          pressed ? 'bg-[#f1c40f]' : 'bg-transparent'}`}
+          onPress={()=>setPressed(true)}
+          >
+            <Text className={`${pressed? 'text-white' : 'text-[#f1c40f]'} font-bold text-sm`}>Adjust Goals</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
