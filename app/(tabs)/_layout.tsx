@@ -86,11 +86,11 @@ const TabsLayout = () => {
       />
 
      <Tabs.Screen
-        name="CalenderScreen"
+        name="CalendarScreen"
         options={{
           title: "Calender",
           tabBarLabel: "", // Hides the label below the tab icon (we only want the icon to show)
-
+          headerShown: false,
           // Custom tab bar icon
           tabBarIcon: ({ focused }) => (
             <View
