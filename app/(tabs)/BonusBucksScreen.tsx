@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-
+import BonusBucksLogo from "../../assets/images/BonusBucksLogo"
 const transactions = [
   { 
     id: '1', 
@@ -73,7 +73,7 @@ export default function BonusBucksScreen() {
           <TouchableOpacity className="items-center">
             <View className="bg-gray-800 p-4 rounded-2xl mb-2">
               <Image 
-                source={require('../../assets/images/BonusBucksLogo/BonusBucksLogo.png')}
+                source={BonusBucksLogo.AddBucksLogo}
                 className="w-7 h-7"
               />
             </View>
@@ -83,7 +83,7 @@ export default function BonusBucksScreen() {
           <TouchableOpacity className="items-center">
             <View className="bg-gray-800 p-4 rounded-2xl mb-2">
               <Image 
-                source={require('../../assets/images/BonusBucksLogo/BonusBucksLogo.png')}
+                source={BonusBucksLogo.QRLogo}
                 className="w-7 h-7"
               />
             </View>
