@@ -21,9 +21,9 @@ const Index = () => {
   return (
     // SafeAreaView keeps content out of notches and rounded screen edges
     <SafeAreaView className="flex-1 bg-white">
+      <ScrollView>
       {/* Main content wrapper, centered horizontally */}
       <View className="items-center">
-
         {/* Shows animated progress ring visual for calorie tracking */}
         <ProgressRings value={calories} goal={goal} />
 
@@ -97,9 +97,15 @@ const Index = () => {
               onPress={() => setFocusedTab(tab)} // Set the focused tab when pressed
               className={`
                 px-4 py-3
-                ${index === 0 ? "rounded-l-lg" : ""}   // Rounded left corner for first button
-                ${index === tabs.length - 1 ? "rounded-r-lg" : ""} // Rounded right corner for last button
-                ${focusedTab === tab ? "bg-[#D4AF37]" : "bg-[#FFFBF0]"} // Highlight the selected tab
+                ${
+                  index === 0 ? "rounded-l-lg" : ""
+                }   // Rounded left corner for first button
+                ${
+                  index === tabs.length - 1 ? "rounded-r-lg" : ""
+                } // Rounded right corner for last button
+                ${
+                  focusedTab === tab ? "bg-[#D4AF37]" : "bg-[#FFFBF0]"
+                } // Highlight the selected tab
               `}
             >
               <Text
@@ -112,7 +118,13 @@ const Index = () => {
             </TouchableOpacity>
           ))}
         </View>
+        <View className="w-full px-4 mt-2">
+          <Text className="text-left text-lg font-semibold">
+            Recommended {focusedTab}
+          </Text>
+        </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
