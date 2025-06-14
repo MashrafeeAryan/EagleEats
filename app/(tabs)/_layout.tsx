@@ -48,7 +48,8 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="BonusBucksScreen"
         options={{
-          title: "Bonus Bucks",
+          tabBarLabel:"BonusBucks",
+
           //When user is on that page, the icon color will be golden
           //When user leaves the page, icon color will be gray
           tabBarIcon: ({ focused }) => (
@@ -62,10 +63,29 @@ const TabsLayout = () => {
               resizeMode="contain"
             />
           ),
+
+          headerTitle: "Eagle Eats +",
+          headerTitleAlign: "center",
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+
+          // Here's the key part: a custom header background
+          headerBackground: () => (
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, backgroundColor: "#F4C542" }} />
+              <View style={{ height: 5, backgroundColor: "#fff" }} />
+              <View style={{ height: 5, backgroundColor: "#F4C542" }} />
+            </View>
+          ),
+          headerStyle: {
+            height: 80, // Add space for the stripe
+          },
         }}
       />
 
-      <Tabs.Screen
+     <Tabs.Screen
         name="CalenderScreen"
         options={{
           title: "Calender",
