@@ -24,7 +24,7 @@ const ProfileScreen = () => {
 
 				{/* Back + Settings Row */}
 				<View className='flex-row justify-end px-4 mt-1 py-1'>
-					<TouchableOpacity className='p-2 rounded-[8px]' >
+					<TouchableOpacity className='p-2 rounded-[8px]' onPress={() => {router.replace('../(auth)/LoginScreen')}} >
 						<Ionicons name="settings-sharp" size={24} color="black" />
 					</TouchableOpacity>
 				</View>
