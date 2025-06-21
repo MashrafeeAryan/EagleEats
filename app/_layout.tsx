@@ -15,6 +15,12 @@ export default function RootLayout() {
         options={{headerShown:false}}
       
       />
+
+      <Stack.Screen
+        name="(hidden)"
+        options={{headerShown:false}}
+      
+      />
     </Stack>
   );
 }

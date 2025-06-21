@@ -3,8 +3,13 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CalendarStrip from "@/components/CalendarStrip";
 import MealBox from "@/components/MealBox";
+import { useRouter } from "expo-router";
 
 const CalendarScreen = () => {
+  const router = useRouter()
+  const handleAddFood = () => {
+    router.push("/AddFoodScreen")
+  }
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
@@ -25,8 +30,15 @@ const CalendarScreen = () => {
               <Text>Chicken</Text>
               <Text>450 KCAL</Text>
             </View>
+            <View className="h-px bg-gray-300 my-4 w-full" />
+            <View className="flex-row justify-between">
+              <Text>Chicken</Text>
+              <Text>450 KCAL</Text>
+            </View>
             <View className="items-center mt-3">
-              <TouchableOpacity className="border-2 border-[#f8d04a] rounded-full py-2 px-3">
+              <TouchableOpacity className="border-2 border-[#f8d04a] rounded-full py-2 px-3"
+                onPress={handleAddFood}
+              >
                 <Text className="text-yellow-500 font-bold">Add Food +</Text>
               </TouchableOpacity>
             </View>
