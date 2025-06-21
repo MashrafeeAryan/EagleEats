@@ -1,12 +1,225 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
+import { useState } from "react";
+import { Feather, FontAwesome } from "@expo/vector-icons";
+import CheckBox from "expo-checkbox";
+import { useRouter } from "expo-router";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
 
-const SignUpScreen = () => {
+export default function SignUpScreen() {
+  // Input Fields
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
+
+  // Eye toggle
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [retypeVisible, setRetypeVisible] = useState(false);
+
+  // terms and conditons toggle
+  const [agreed, setAgreed] = useState(false);
+
+  // Gender selection
+  const [genderDropdownOpen, setGenderDropdownOpen] = useState(false);
+  const [selectedGender, setSelectedGender] = useState(null);
+
+  // Birthdate Selection
+  const [birthDate, setBirthDate] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const router = useRouter();
+
   return (
-    <View>
-      <Text>SignUpScreen</Text>
-    </View>
-  )
-}
+    <View className="flex-1 bg-gray-50 justify-center items-center px-6">
+      <Text className="text-4xl font-extrabold text-gray-900 mb-[45px]">
+        Sign Up
+      </Text>
 
-export default SignUpScreen
+      {/* Full Name Input */}
+      <View className="w-full bg-white p-3 rounded-xl border border-gray-300 mb-4 flex-row items-center">
+        <TextInput
+          placeholder="Your Full Name"
+          className="flex-1 text-black"
+          placeholderTextColor="#9CA3AF"
+          onChangeText={setUserName}
+        />
+      </View>
+
+      {/* Email Input */}
+      <View className="w-full bg-white p-3 rounded-xl border border-gray-300 mb-4 flex-row items-center">
+        <TextInput
+          placeholder="Your E-mail"
+          className="flex-1 text-black"
+          placeholderTextColor="#9CA3AF"
+          keyboardType="email-address"
+          onChangeText={setEmail}
+        />
+      </View>
+
+      {/* Create Password Field */}
+      <View className="w-full bg-white p-3 rounded-xl border border-gray-300 mb-4 flex-row items-center">
+        <TextInput
+          placeholder="Create your Password"
+          secureTextEntry={!passwordVisible}
+          className="flex-1 text-black"
+          placeholderTextColor="#9CA3AF"
+          onChangeText={setPassword}
+        />
+
+        {/* password view toggle */}
+        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+          <Feather
+            name={passwordVisible ? "eye-off" : "eye"}
+            size={20}
+            color="#6B7280"
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Retype Password Field */}
+      <View className="w-full bg-white p-3 rounded-xl border border-gray-300 mb-2 flex-row items-center">
+        <TextInput
+          placeholder="Re-type your Password"
+          secureTextEntry={!retypeVisible}
+          className="flex-1 text-black"
+          placeholderTextColor="#9CA3AF"
+          onChangeText={setRePassword}
+        />
+
+        {/* password view toggle */}
+        <TouchableOpacity onPress={() => setRetypeVisible(!retypeVisible)}>
+          <Feather
+            name={retypeVisible ? "eye-off" : "eye"}
+            size={20}
+            color="#6B7280"
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Both Gender and Birth Date */}
+      <View className="w-full flex-row mb-4 relative">
+        {/* Gender Selection */}
+        <View className="flex-1 mr-2 relative">
+          {/* Clickable Header */}
+          <TouchableOpacity
+            className="bg-white p-4 rounded-xl border border-gray-300 flex-row items-center justify-between"
+            onPress={() => setGenderDropdownOpen(!genderDropdownOpen)}
+          >
+            <View className="flex-1 pr-2">
+              <Text
+                className={`text-base ${
+                  selectedGender ? "text-black" : "text-gray-400"
+                } truncate`}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {selectedGender || "Gender"}
+              </Text>
+            </View>
+            <Feather
+              name={genderDropdownOpen ? "chevron-up" : "chevron-down"}
+              size={16}
+              color="#6B7280"
+            />
+          </TouchableOpacity>
+
+          {/* Floating Dropdown for Gender Selection */}
+          {genderDropdownOpen && (
+            <View className="absolute top-[60px] left-0 w-full z-50 bg-white border border-gray-300 rounded-xl shadow-md">
+              {["Male", "Female", "Other", "Prefer not to say"].map(
+                (option) => (
+                  <TouchableOpacity
+                    key={option}
+                    className="p-3 border-b border-gray-200 last:border-b-0"
+                    onPress={() => {
+                      setSelectedGender(option);
+                      setGenderDropdownOpen(false);
+                    }}
+                  >
+                    <Text className="text-gray-800">{option}</Text>
+                  </TouchableOpacity>
+                )
+              )}
+            </View>
+          )}
+        </View>
+
+        {/* Birth Date Selection */}
+        <View className="flex-1 relative">
+          <TouchableOpacity
+            className="bg-white p-4 rounded-xl border border-gray-300 flex-row justify-between items-center"
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text
+              className={`text-base ${
+                birthDate ? "text-black" : "text-gray-400"
+              } truncate`}
+            >
+              {birthDate ? moment(birthDate).format("MMM DD, YYYY") : "Birth"}
+            </Text>
+            <FontAwesome name="calendar" size={16} color="#6B7280" />
+          </TouchableOpacity>
+					
+					{/* Pop up for Gender Selection */}
+          {showDatePicker && (
+            <DateTimePicker
+              value={birthDate || new Date(2000, 0, 1)}
+              mode="date"
+              display="default"
+              maximumDate={new Date()} // prevent future dates
+              onChange={(event, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) {
+                  setBirthDate(selectedDate);
+                }
+              }}
+            />
+          )}
+        </View>
+      </View>
+
+      {/* Terms and Conditions Toggle */}
+      <View className="flex-row items-center mb-6 self-start">
+        <CheckBox
+          value={agreed}
+          onValueChange={setAgreed}
+          color={agreed ? "#111827" : undefined}
+        />
+        <Text className="text-xs text-gray-500 ml-2">
+          I agree to the Terms and Conditions
+        </Text>
+      </View>
+
+      {/* Create Account Button */}
+      <TouchableOpacity
+        className="w-full bg-gray-800 p-4 rounded-xl mb-4"
+        onPress={() =>
+          console.log(
+            `Signing In...with name:${username}, email:${email}, password:${password}, re-password${rePassword}, gender: ${selectedGender}, Birth Date: ${birthDate}, and Terms: ${agreed}`
+          )
+        }
+      >
+        <Text className="text-center text-white font-bold text-lg">
+          Create your Account
+        </Text>
+      </TouchableOpacity>
+
+      {/* Sign In Page Redirect */}
+      <TouchableOpacity>
+        <Text
+          className="text-sm text-black underline"
+          onPress={() => router.replace("/(auth)/LoginScreen")}
+        >
+          Already have an account? Sign In now
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
