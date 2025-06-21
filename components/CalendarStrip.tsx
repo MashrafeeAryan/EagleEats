@@ -1,108 +1,190 @@
-// Importing basic components from React Native
-import { FlatList, Text, TouchableOpacity, View, Dimensions } from "react-native";
+// React Native core components used for layout, interaction, and measurement
+import {
+  FlatList,        // A performant horizontal/vertical scrolling list
+  Text,             // Used to render text on the screen
+  TouchableOpacity, // Makes items clickable/tappable
+  View,             // Basic container/view element
+  Dimensions        // Used to get screen width for responsive sizing
+} from "react-native";
 
-// React hooks to manage state and memoization
-import { useState, useMemo } from "react";
+// React hooks for managing component state, references, and memoized values
+import { useState, useMemo, useRef } from "react";
 
-// Moment is a library that helps work with dates (like getting today or next week)
+// Moment.js is used to easily work with and format dates
 import moment from "moment";
 
-// Get the width of the phone screen so we can size our date strip properly
+// Ionicons library for displaying arrow icons in the calendar
+import { Ionicons } from "@expo/vector-icons";
+
+// Get the full width of the device screen so we can layout the calendar accordingly
 const screenWidth = Dimensions.get("window").width;
 
-// This is the main component that shows the horizontal calendar
+// CalendarStrip component - shows a horizontal, paginated calendar with arrows
 const CalendarStrip = () => {
-  // Get today's date in the format 'YYYY-MM-DD' (example: 2025-06-14)
+  // Get today's date in "YYYY-MM-DD" format
   const today = moment().format("YYYY-MM-DD");
 
-  // Create a piece of memory (state) to remember which day the user has selected
-  // By default, the selected day is today
+  // Keeps track of the currently selected day (highlighted)
   const [focusedDay, setFocusedDay] = useState(today);
 
-  // This block generates a list of 60 days (30 before and 30 after today)
-  // Then it splits them into smaller groups (chunks) of 5 days each
+  // Number of 5-day chunks to initially generate (12 chunks = 60 days)
+  const [chunkCount, setChunkCount] = useState(12);
+
+  // Reference to the FlatList, so we can programmatically scroll it left/right
+  const flatListRef = useRef(null);
+
+  // Compute the list of 5-day chunks using memoization
   const pagedDays = useMemo(() => {
-    // Start from 30 days before today
-    const start = moment().subtract(30, "days");
+    // Start the range from 30 days before today (chunkCount / 2 * 5 days)
+    const start = moment().subtract((chunkCount / 2) * 5, "days");
 
-    // Create a list of 60 days by adding 1 day at a time
-    const allDays = Array.from({ length: 60 }, (_, i) => start.clone().add(i, "days"));
+    // Create a flat array of all days needed
+    const allDays = Array.from({ length: chunkCount * 5 }, (_, i) =>
+      start.clone().add(i, "days")
+    );
 
-    // Now divide the list of 60 days into chunks of 5
+    // Break the full list into smaller chunks of 5 days each
     const chunks = [];
     for (let i = 0; i < allDays.length; i += 5) {
-      chunks.push(allDays.slice(i, i + 5)); // Slice out 5 days at a time
+      chunks.push(allDays.slice(i, i + 5));
     }
 
-    // Return the list of chunks (each chunk is a 5-day window)
-    return chunks;
-  }, []);
+    return chunks; // Final list of 5-day chunks
+  }, [chunkCount]);
 
-  // This part finds out which chunk contains today's date
+  // Find the index of the chunk that contains today's date
   const initialChunkIndex = useMemo(() => {
     return pagedDays.findIndex((chunk) =>
-      chunk.some((d) => d.format("YYYY-MM-DD") === today) // Look inside each chunk for today
+      chunk.some((d) => d.format("YYYY-MM-DD") === today)
     );
   }, [pagedDays, today]);
 
-  // The actual UI part of the calendar
+  // Keeps track of which chunk (page) the user is currently viewing
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(initialChunkIndex);
+
+  // Function to scroll the calendar left or right by chunk index
+  const scrollToIndex = (index) => {
+    if (index < 0) return; // prevent scrolling before the beginning
+
+    // If the user scrolls beyond current available chunks, load more into memory
+    if (index >= pagedDays.length - 1) {
+      setChunkCount((prev) => prev + 6); // Add 6 more chunks (30 more days)
+      return;
+    }
+
+    // Scroll to the specified index (page)
+    setCurrentChunkIndex(index);
+    flatListRef.current?.scrollToIndex({ index, animated: true });
+  };
+
+  // Width available for the calendar dates (after accounting for left and right arrows)
+  const calendarWidth = screenWidth - 80;
+
+  // Dynamically calculate the width of each date box so 5 fit within the calendarWidth
+  const dateBoxWidth = calendarWidth / 5 - 4; // 4px buffer between boxes
+
   return (
     <View style={{ paddingVertical: 10 }}>
-      {/* Display the month (like "June 2025") above the strip */}
-      <Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 16, marginBottom: 10 }}>
-        {moment(focusedDay).format("MMMM YYYY")} {/* Format the selected date into "Month Year" */}
+      {/* Show the current month and year (e.g., "June 2025") */}
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: "bold",
+          marginLeft: 16,
+          marginBottom: 10,
+        }}
+      >
+        {moment(focusedDay).format("MMMM YYYY")}
       </Text>
 
-      {/* Create the horizontal scrolling list of 5-day windows */}
-      <FlatList
-        data={pagedDays} // Supply the 5-day chunks as data
-        horizontal // Make the list scroll sideways
-        pagingEnabled // Snap to each 5-day page when scrolling
-        showsHorizontalScrollIndicator={false} // Hide the scroll bar
-        keyExtractor={(_, index) => index.toString()} // Give each chunk a unique key
-        initialScrollIndex={initialChunkIndex} // Scroll straight to the chunk with today
-        getItemLayout={(_, index) => ({
-          length: screenWidth,        // Each chunk takes up the full width of the screen
-          offset: screenWidth * index, // Calculate position of each chunk
-          index,
-        })}
-        renderItem={({ item }) => (
-          // Display one 5-day window at a time
-          <View style={{ flexDirection: "row", width: screenWidth, justifyContent: "space-evenly" }}>
-            {item.map((day) => {
-              // For each individual day in the chunk
-              const dateStr = day.format("YYYY-MM-DD"); // Format the date to match the selected format
-              const isSelected = dateStr === focusedDay; // Check if this is the selected day
+      {/* Arrows and date strip are arranged horizontally */}
+      <View
+        style={{
+          flexDirection: "row",            // Layout children side-by-side
+          alignItems: "center",            // Vertically center all items
+          justifyContent: "space-between", // Space out arrow - calendar - arrow
+          paddingHorizontal: 10,           // Add spacing to left/right of strip
+        }}
+      >
+        {/* Left arrow button */}
+        <TouchableOpacity onPress={() => scrollToIndex(currentChunkIndex - 1)}>
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
 
-              return (
-                <TouchableOpacity
-                  key={dateStr} // Give each day a unique key
-                  onPress={() => setFocusedDay(dateStr)} // When pressed, update the selected day
-                  style={{
-                    backgroundColor: isSelected ? "#F5BE2F" : "#f2f2f2", // Yellow if selected, gray otherwise
-                    borderRadius: 10,
-                    paddingVertical: 10,
-                    paddingHorizontal: 14,
-                    alignItems: "center",
-                    width: 60, // Make all date buttons the same size
-                  }}
-                >
-                  {/* Show the day of the week (like "Mon", "Tue") */}
-                  <Text style={{ color: "#888" }}>{day.format("ddd")}</Text>
+        {/* FlatList that shows a chunk of 5 days at a time */}
+        <FlatList
+          ref={flatListRef}                      // Needed to scroll programmatically
+          data={pagedDays}                       // Array of 5-day chunks
+          horizontal                             // Horizontal scrolling
+          pagingEnabled                          // Snap one chunk at a time
+          showsHorizontalScrollIndicator={false} // Hide scroll bar
+          keyExtractor={(_, index) => index.toString()} // Unique key for each chunk
+          initialScrollIndex={initialChunkIndex}        // Start at today's chunk
+          getItemLayout={(_, index) => ({
+            length: calendarWidth,              // Each item takes full calendarWidth
+            offset: calendarWidth * index,      // Distance from start
+            index,
+          })}
+          onMomentumScrollEnd={(e) => {
+            // After scrolling stops, calculate which chunk is now visible
+            const newIndex = Math.round(
+              e.nativeEvent.contentOffset.x / calendarWidth
+            );
+            setCurrentChunkIndex(newIndex);
+          }}
+          renderItem={({ item }) => (
+            // Render each 5-day chunk as a row of date buttons
+            <View
+              style={{
+                flexDirection: "row",
+                width: calendarWidth,
+                justifyContent: "space-between", // Even spacing between days
+              }}
+            >
+              {/* Render each individual day in the chunk */}
+              {item.map((day) => {
+                const dateStr = day.format("YYYY-MM-DD");       // Format day to string
+                const isSelected = dateStr === focusedDay;      // Check if selected
 
-                  {/* Show the day number (like "14") */}
-                  <Text style={{ color: isSelected ? "#fff" : "#000", fontWeight: "bold" }}>
-                    {day.format("D")}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        )}
-      />
+                return (
+                  <TouchableOpacity
+                    key={dateStr}                         // Unique key for day
+                    onPress={() => setFocusedDay(dateStr)} // When tapped, set as selected
+                    style={{
+                      backgroundColor: isSelected ? "#F5BE2F" : "#f2f2f2", // Highlight selected
+                      borderRadius: 10,
+                      paddingVertical: 10,
+                      alignItems: "center",
+                      width: dateBoxWidth,               // Dynamically fit 5 days per row
+                    }}
+                  >
+                    {/* Show weekday (Mon, Tue, etc.) */}
+                    <Text style={{ color: "#888" }}>{day.format("ddd")}</Text>
+
+                    {/* Show day number (e.g., 14) */}
+                    <Text
+                      style={{
+                        color: isSelected ? "#fff" : "#000", // White if selected
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {day.format("D")}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+        />
+
+        {/* Right arrow button */}
+        <TouchableOpacity onPress={() => scrollToIndex(currentChunkIndex + 1)}>
+          <Ionicons name="chevron-forward" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-// Export this component so it can be used in other screens
+// Export the calendar component so you can use it in other screens
 export default CalendarStrip;
