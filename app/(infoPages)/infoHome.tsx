@@ -1,10 +1,17 @@
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import infoPageLogos from "../../assets/images/infoPageLogos";
 import { Ionicons } from "@expo/vector-icons";
+import WeightComponent from "@/components/WeightComponent";
+import HeightComponent from "@/components/HeightComponent";
+import AgeComponent from "@/components/AgeComponent";
 
 const infoHome = () => {
+
+  const [showWeightComponent, setShowWeightComponent] = useState(false)
+  const [showHeightComponent, setShowHeightComponent] = useState(false)
+  const [showAgeComponent, setShowAgeComponent] = useState(false)
   return (
     <SafeAreaView>
       <ScrollView>
@@ -26,32 +33,43 @@ const infoHome = () => {
 
           <View className="w-full p-7">
             <View className="bg-white p-3 w-full rounded-xl">
-              <TouchableOpacity className="flex-row space-x-5 items-center">
+              <TouchableOpacity className="flex-row space-x-5 items-center"
+                onPress={()=>{
+                  setShowWeightComponent(true)
+                }}
+              >
                 <Image
                   source={infoPageLogos.weightScaleLogo}
                   style={{ width: 60, height: 60 }}
                 />
                 <Text className="font-bold text-2xl">Weight</Text>
               </TouchableOpacity>
+              {showWeightComponent && <WeightComponent showWeightComponent={showWeightComponent} setShowWeightComponent={setShowWeightComponent}/>}
             </View>
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center">
+              <TouchableOpacity className="flex-row space-x-5 items-center"
+              onPress={()=>{setShowHeightComponent(true)}}
+              >
                 <Image
                   source={infoPageLogos.HeightScaleLogo}
                   style={{ width: 60, height: 60 }}
                 />
                 <Text className="font-bold text-2xl">Height</Text>
               </TouchableOpacity>
+              {showHeightComponent && <HeightComponent showHeightComponent={showHeightComponent} setShowHeightComponent={setShowHeightComponent} />}
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center">
+              <TouchableOpacity className="flex-row space-x-5 items-center"
+              onPress={()=>{setShowAgeComponent(true)}}
+              >
                 <Image
                   source={infoPageLogos.ageLogo}
                   style={{ width: 60, height: 60 }}
                 />
                 <Text className="font-bold text-2xl">Age</Text>
               </TouchableOpacity>
+              {showAgeComponent && <AgeComponent showAgeComponent={showAgeComponent} setShowAgeComponent={setShowAgeComponent} />}
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
@@ -75,7 +93,7 @@ const infoHome = () => {
             </View>
           </View>
 
-          <View className="tems-center">
+          <View className="items-center">
             <Text>You will be able to update this at any time</Text>
           </View>
           <View className="flex-row space-x-7 items-cente mt-3">
