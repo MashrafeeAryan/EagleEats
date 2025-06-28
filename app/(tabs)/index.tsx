@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProgressRings from "@/components/ProgressRings"; // Custom progress ring component
+import { Link } from "expo-router";
 
 const Index = () => {
   // Set static values for calorie tracking
@@ -124,6 +125,7 @@ const Index = () => {
           </Text>
         </View>
       </View>
+      <Link href="../(infoPages)/infoHome">Info Pages</Link>
       </ScrollView>
     </SafeAreaView>
   );
