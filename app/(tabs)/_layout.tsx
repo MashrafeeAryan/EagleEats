@@ -3,8 +3,11 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import tabBarLogos from "@/assets/images/tabBarLogos";
+import UserOnly from '../../components/auth/UserOnly';
+
 const TabsLayout = () => {
   return (
+    <UserOnly>
     <Tabs
       screenOptions={{
         tabBarStyle: {
@@ -184,6 +187,7 @@ const TabsLayout = () => {
         }}
       />
     </Tabs>
+    </UserOnly>
   );
 };
 

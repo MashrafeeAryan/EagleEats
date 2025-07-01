@@ -1,8 +1,9 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Image } from 'react-native';
 import { useRouter } from "expo-router";
+import { useUser } from "@/hooks/useUser";
 
 
 export default function WelcomeScreen() {
@@ -15,8 +16,33 @@ export default function WelcomeScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  // error message
+  const [error, setError] = useState(null)
+
+	const { login } = useUser()
+
+  // // Auto-dismiss error message after 4 seconds
+  // useEffect(() => {
+  //   if (error) {
+  //     const timer = setTimeout(() => {
+  //       setError(null);
+  //     }, 4000); // 4 seconds
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [error]);
+
+  // handles login
+	const handleLogin = async () => {
+		setError(null)
+		try {
+			await login(email, password)
+		} catch (error) {
+			setError(error.message)
+		}
+	};
+
   return (
-    
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View className="flex-1 bg-gray-50 justify-center items-center px-6">
 
       {/* Greeting on top */}
@@ -58,12 +84,19 @@ export default function WelcomeScreen() {
       </View>
 
       {/* Forgot Password */}
-      <TouchableOpacity className="self-start mb-4" onPress={() => console.log('Forgot Password')}>
+      <TouchableOpacity className="self-start mb-2" onPress={() => console.log('Forgot Password')}>
         <Text className="text-sm text-gray-500">Forgot your Password?</Text>
       </TouchableOpacity>
+
+      {/* Error message */}
+      {error && (<View className="py-2">
+        <Text className=" text-red-600 p-2 bg-red-200 border border-red-600 rounded-md">
+          {error}
+        </Text>
+      </View>)}
       
       {/* Sign In Button */}
-      <TouchableOpacity className="w-full bg-gray-800 p-4 rounded-xl mb-4" onPress={() => console.log(`Signing In...with email:${email} and password:${password}`)}>
+      <TouchableOpacity className="w-full bg-gray-800 p-4 rounded-xl mb-4" onPress={handleLogin}>
         <Text className="text-center text-white font-bold text-lg">Sign In</Text>
       </TouchableOpacity>
 
@@ -101,5 +134,6 @@ export default function WelcomeScreen() {
         </Text>
       </TouchableOpacity>
     </View>
+    </TouchableWithoutFeedback>
   );
 }

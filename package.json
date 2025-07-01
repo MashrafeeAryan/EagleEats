@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@react-native-community/datetimepicker": "8.3.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "appwrite": "^18.1.1",
     "expo": "~53.0.10",
     "expo-blur": "~14.1.5",
     "expo-checkbox": "^4.1.4",
@@ -37,16 +39,18 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.3",
+    "react-native-appwrite": "^0.10.0",
     "react-native-calendar-strip": "^2.2.6",
     "react-native-calendars": "^1.1312.1",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-image-picker": "^8.2.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
-    "@react-native-community/datetimepicker": "8.3.0"
+    "expo-image-picker": "~16.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

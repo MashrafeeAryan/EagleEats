@@ -1,7 +1,12 @@
+import { useUser } from '@/hooks/useUser';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text, Image, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import { account, storage } from '@/lib/appwrite';
+import { ID } from 'react-native-appwrite';
 
 const ProfileScreen = () => {
 	const stats = [
@@ -16,6 +21,46 @@ const ProfileScreen = () => {
 
 	const router = useRouter()
 
+	const {user, logout} = useUser()
+
+
+	const [profileImage, setProfileImage] = useState(null)
+
+	
+	const pickImage = async () => {
+  		console.log('start');
+
+		// Ask for permission
+		const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		if (!permission.granted) {
+			console.log('Permission denied');
+			return;
+		}
+
+		// Open image library
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			quality: 1,
+		});
+
+		// Handle result
+		if (!result.canceled) {
+			const selected = result.assets[0];
+
+			console.log((selected))
+			setProfileImage(selected); // temporary display
+
+			
+			const fileId = await uploadProfileImage(selected);
+			if (fileId) {
+			await saveImageIdToUser(fileId);
+			}
+		}
+	};
+
+
+
 	return (
 		<SafeAreaView className='flex-1 bg-white'>
 
@@ -24,7 +69,7 @@ const ProfileScreen = () => {
 
 				{/* Back + Settings Row */}
 				<View className='flex-row justify-end px-4 mt-1 py-1'>
-					<TouchableOpacity className='p-2 rounded-[8px]' onPress={() => {router.replace('../(auth)/LoginScreen')}} >
+					<TouchableOpacity className='p-2 rounded-[8px]' onPress={() => {console.log('This is setting Page Button')}} >
 						<Ionicons name="settings-sharp" size={24} color="black" />
 					</TouchableOpacity>
 				</View>
@@ -35,16 +80,26 @@ const ProfileScreen = () => {
 				{/* USER INFO */}
 				<View className="flex-row items-center px-9 pb-4">
 				<View className="relative mr-4">
+
+					{/* Conditionally render the default profile pic or other pic if the user selects*/}
+					{profileImage ? 
+					(<Image source={{ uri: profileImage.uri }} className="w-[70px] h-[70px] rounded-full bg-gray-300"/>
+					) : (
 					<Image
 					source={require('../../assets/images/hacker-icon.png')} // Replace with actual avatar image later
 					className="w-[70px] h-[70px] rounded-full bg-gray-300"
-					/>
-					<View className="absolute bottom-0 right-0 bg-yellow-400 w-5 h-5 rounded-full border-2 border-white items-center justify-center">
-						<Ionicons name="add" size={16} color="black"/>
-					</View>
+					/>)}
+					
+
+					<TouchableOpacity onPress={pickImage}>
+						<View className="absolute bottom-0 right-0 bg-yellow-400 w-6 h-6 rounded-full border-2 border-white items-center justify-center">
+							<Ionicons name="add" size={16} color="black"/>
+						</View>
+					</TouchableOpacity>
+
 				</View>
 				<View>
-					<Text className="text-lg font-bold">Sonam Sherpa</Text>
+					<Text className="text-lg font-bold">{user.name}</Text>
 					<Text className="text-gray-500 mt-1">@sonamshrpac</Text>
 				</View>
 				</View>
@@ -82,9 +137,147 @@ const ProfileScreen = () => {
 				<Text className="mt-4 px-6 text-sm text-gray-800 text-center">
 					“Hi User. You're on track 5/7 days this week. Keep it up!”
 				</Text>
+
+
+
+				{/* Temporary Logout Section*/}
+				<Text className="text-xl font-semibold text-center mt-8">User Logged in</Text>
+				<View className="flex-1 justify-center items-center">
+					<Text className="text-2xl mb-6">Profile Page (for now)</Text>
+
+					<TouchableOpacity
+						className="bg-blue-500 py-3 px-6 rounded-lg items-center justify-center"
+						onPress={logout}
+					>
+						<Text className="text-white text-base font-semibold">Logout</Text>
+					</TouchableOpacity>
+
+					<Text className="text-2xl mt-8">User Details</Text>
+					<Text className="text-2xl mt-2">
+						{user.email}
+					</Text>
+				</View>
+
 			</ScrollView>
 		</SafeAreaView>
 	);
 };
 
 export default ProfileScreen;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
+// import * as ImagePicker from 'expo-image-picker';
+// import { storage, account, databases, bucketID, databaseID, usersCollectionID, projectID } from '@/lib/appwrite';
+// import { useUser } from '@/hooks/useUser';
+
+// const ProfileScreen = () => {
+//   const [userId, setUserId] = useState('');
+//   const [profileImage, setProfileImage] = useState(null); // local state
+//   const [imageUrl, setImageUrl] = useState(''); // from Appwrite
+
+
+//   const {user} = useUser()
+//   console.log(user)
+
+//   useEffect(() => {
+//     const fetchUser = async () => {
+//       try {
+//         const user = await account.get();
+//         setUserId(user.$id);
+
+//         const userDoc = await databases.getDocument(databaseID, usersCollectionID, user.$id);
+//         setImageUrl(userDoc.imageUrl || '');
+//       } catch (err) {
+//         console.log('Error fetching user', err);
+//       }
+//     };
+//     fetchUser();
+//   }, []);
+
+//   const prepareImageFile = async (imageResult) => {
+//     return {
+//       name: imageResult.assets[0].fileName || 'profile.jpg',
+//       size: imageResult.assets[0].fileSize || 500000,
+//       type: imageResult.assets[0].mimeType || 'image/jpeg',
+//       uri: imageResult.assets[0].uri,
+//     };
+//   };
+
+//   const pickImage = async () => {
+//     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+//     if (!permission.granted) return Alert.alert('Permission denied');
+
+//     const result = await ImagePicker.launchImageLibraryAsync({
+//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//       allowsEditing: true,
+//       quality: 1,
+//     });
+
+//     if (!result.canceled) {
+//       const fileData = await prepareImageFile(result);
+//       const customFileID = `${userId}_image`;
+
+//       try {
+//         // Delete previous image if it exists
+//         await storage.deleteFile(bucketID, customFileID).catch(() => {}); // ignore if not found
+
+//         // Upload new image
+//         const uploaded = await storage.createFile(bucketID, customFileID, fileData);
+
+//         const url = `https://cloud.appwrite.io/v1/storage/buckets/${bucketID}/files/${uploaded.$id}/view?project=${projectID}`;
+//         setImageUrl(url);
+//         setProfileImage(fileData.uri);
+
+//         // Save to user's document
+//         await databases.updateDocument(databaseID, usersCollectionID, userId, {
+//           imageUrl: url,
+//         });
+
+//         console.log('Image uploaded and user updated');
+//       } catch (error) {
+//         console.log('Upload failed', error);
+//         Alert.alert('Upload failed', error.message);
+//       }
+//     }
+//   };
+
+//   return (
+//     <View className="p-4">
+//       <TouchableOpacity onPress={pickImage}>
+//         <Image
+//           source={
+//             profileImage
+//               ? { uri: profileImage }
+//               : imageUrl
+//               ? { uri: imageUrl }
+//               : require('../../assets/images/hacker-icon.png')
+//           }
+//           style={{ width: 100, height: 100, borderRadius: 50 }}
+//         />
+//         <Text className="text-center mt-2">Tap to change</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// export default ProfileScreen;
