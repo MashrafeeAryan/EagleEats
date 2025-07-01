@@ -109,8 +109,6 @@ export default function SignUpScreen() {
 
     try {
     await register(email, password, username);
-    // You can also pass other fields to register if supported
-    // e.g., register(email, password, {username, gender: selectedGender, birthDate})
     } catch (error) {
     setError(error.message || "Something went wrong. Please try again.");
     }

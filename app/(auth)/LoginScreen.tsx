@@ -21,15 +21,7 @@ export default function WelcomeScreen() {
 
 	const { login } = useUser()
 
-  // // Auto-dismiss error message after 4 seconds
-  // useEffect(() => {
-  //   if (error) {
-  //     const timer = setTimeout(() => {
-  //       setError(null);
-  //     }, 4000); // 4 seconds
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [error]);
+
 
   // handles login
 	const handleLogin = async () => {
