@@ -17,39 +17,39 @@ const goals = [
     label: "Loose 0.5 lbs per week",
     color: "#76D96E",
     subtitle: "Recommended for beginners",
-    icon: infoPageLogos[""],
+    icon: require("@/assets/images/infoPageLogos/loose_0.5.png"),
   },
   {
     label: "Loose 1 lbs per week",
     color: "#C4F869",
     subtitle: "Recommended for beginners",
-    icon: require("@/assets/images/google.png"),
+    icon: require("@/assets/images/infoPageLogos/loose_1.png"),
   },
   {
     label: "Loose 1.5 lbs per week",
     color: "#FFC94B",
-    icon: require("@/assets/images/google.png"),
+    icon: require("@/assets/images/infoPageLogos/loose_1.5.png"),
   },
   {
     label: "Loose 2 lbs per week",
     color: "#FFA74A",
-    icon: require("@/assets/images/google.png"),
+    icon: require("@/assets/images/infoPageLogos/loose_2.png"),
   },
   {
     label: "Gain 0.5 lbs per week",
     color: "#FFC94B",
-    icon: require("@/assets/images/google.png"),
+    icon: require("@/assets/images/infoPageLogos/Gain05.png"),
   },
   {
     label: "Gain 1 lbs per week",
     color: "#FFA74A",
-    icon: require("@/assets/images/google.png"),
+    icon: require("@/assets/images/infoPageLogos/gain_1.png"),
   },
   {
     label: "Maintain Weight",
     color: "#ECECEC",
-    icon: require("@/assets/images/google.png"),
-    textColor: "#333",
+    icon: require("@/assets/images/infoPageLogos/gain_1.png"),
+   
   },
 ];
 
@@ -94,16 +94,16 @@ const GoalSelectionScreen = () => {
             <TouchableOpacity
               key={index}
               onPress={() => setSelectedGoal(goal.label)}
-              className="rounded-xl px-4 py-7 mb-2 mx-4"
+              className="rounded-2xl px-4 py-7 mb-2 mx-4"
               style={{
                 backgroundColor:
-                  selectedGoal === goal.label ? "#D4AF37" : goal.color || "#f0f0f0",
+                  selectedGoal === goal.label ? "#333" : goal.color || "#f0f0f0",
               }}
             >
               <View className="flex-row items-center">
                 <Image
                   source={goal.icon}
-                  style={{ width: 30, height: 30, marginRight: 10 }}
+                  style={{ width: 65, height: 60, marginRight: 10 }}
                 />
                 <View>
                   <Text
@@ -138,7 +138,7 @@ const GoalSelectionScreen = () => {
           <TouchableOpacity
             className="bg-black px-5 py-3 rounded-lg"
             onPress={() => {
-              router.push("/nextPage"); // Replace with your actual route
+              router.push("/allergies"); // Replace with your actual route
             }}
           >
             <Text className="text-white font-bold">Next</Text>
