@@ -27,10 +27,10 @@ const ActivityLevelComponent = ({
       >
         <View className="w-75 bg-[#DDDDDD] rounded-xl items-center p-4">
           <Image
-            source={infoPageLogos.genderLogo}
+            source={infoPageLogos.actvityLogo}
             style={{ width: 80, height: 80 }}
           />
-          <Text className="font-bold text-2xl">Gender</Text>
+          <Text className="font-bold text-2xl">Activity Level</Text>
           <TouchableOpacity className="bg-white w-full h-15 mt-2 rounded-lg flex-row p-4 items-center space-x-2">
             <Image
               source={infoPageLogos.activityLevelImage2}
