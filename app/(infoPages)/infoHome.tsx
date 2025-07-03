@@ -7,12 +7,14 @@ import WeightComponent from "@/components/WeightComponent";
 import HeightComponent from "@/components/HeightComponent";
 import AgeComponent from "@/components/AgeComponent";
 import GenderComponent from "@/components/GenderComponent";
+import ActivityLevelComponent from "@/components/ActivityLevelComponent";
 
 const infoHome = () => {
   const [showWeightComponent, setShowWeightComponent] = useState(false);
   const [showHeightComponent, setShowHeightComponent] = useState(false);
   const [showAgeComponent, setShowAgeComponent] = useState(false);
   const [showGenderComponent, setShowGenderComponent] = useState(false);
+  const [showActivityLevelComponent, setShowActivityLevelComponent] = useState(false);
   return (
     <SafeAreaView className="bg-white flex-1">
       <ScrollView>
@@ -117,13 +119,18 @@ const infoHome = () => {
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center">
+              <TouchableOpacity className="flex-row space-x-5 items-center"
+                onPress={() => {
+                  setShowActivityLevelComponent(true);
+                }}
+              >
                 <Image
                   source={infoPageLogos.actvityLogo}
                   style={{ width: 60, height: 60 }}
                 />
                 <Text className="font-bold text-2xl">Activity Level</Text>
               </TouchableOpacity>
+              {showActivityLevelComponent && <ActivityLevelComponent showActivityLevelComponent={showActivityLevelComponent} setActivityLevelComponent={setShowActivityLevelComponent}/>}
             </View>
           </View>
 
