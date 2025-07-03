@@ -100,7 +100,7 @@ export function UserProvider({children}) {
 
     // This gives all components in the app access to the user data and actions
     return (
-        <UserContext.Provider value={{user, login, register, logout, authChecked, userUniqueID}}>
+        <UserContext.Provider value={{user, login, register, logout, authChecked}}>
             {children}
         </UserContext.Provider>
     )

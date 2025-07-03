@@ -13,6 +13,9 @@ const InfoLayout = () => {
             name='random'
 
         />
+        <Stack.Screen
+            name='goalPage'
+        />
 
     </Stack>
   )

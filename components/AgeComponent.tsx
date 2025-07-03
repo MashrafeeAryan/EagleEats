@@ -23,7 +23,7 @@ const AgeComponent = ({showAgeComponent, setShowAgeComponent}) => {
           <View className="bg-white w-full h-15 mt-2 rounded-xl flex-row p-3 items-center space-x-1 justify-center">
             {/* Left side: lbs */}
             <View className="flex-row items-center space-x-2">
-              <TextInput className="bg-[#DDDDDD] p-2 w-[70]" />
+              <TextInput className="bg-[#DDDDDD] p-2 w-[70] rounded-xl" />
               <Text className="font-bold text-lg">years old</Text>
             </View>
 
