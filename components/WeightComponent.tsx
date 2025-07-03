@@ -23,13 +23,13 @@ const WeightComponent = ({showWeightComponent, setShowWeightComponent}) => {
           <View className="bg-white w-full h-15 mt-2 rounded-xl flex-row p-3 items-center space-x-1">
             {/* Left side: lbs */}
             <View className="flex-row items-center space-x-2">
-              <TextInput className="bg-[#DDDDDD] p-2 w-[70]" />
+              <TextInput className="bg-[#DDDDDD] p-2 w-[70] rounded-xl" />
               <Text className="font-bold text-lg">lbs</Text>
               <View className="bg-black w-1 h-8 rounded-full mx-3" />
             </View>
 
             <View className="flex-row items-center space-x-2">
-              <TextInput className="bg-[#DDDDDD] p-2 w-[70]" />
+              <TextInput className="bg-[#DDDDDD] p-2 w-[70] rounded-xl" />
               <Text className="font-bold text-lg">kg</Text>
             </View>
 
