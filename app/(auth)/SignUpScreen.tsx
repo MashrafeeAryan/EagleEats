@@ -15,7 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import { useUser } from "@/hooks/useUser";
 
-export default function SignUpScreen() {
+export default function  SignUpScreen() {
   // Input Fields
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
