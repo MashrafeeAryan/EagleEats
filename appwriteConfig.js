@@ -12,5 +12,5 @@ export const client = new Client()
 export const account = new Account(client)
 export const databases = new Databases(client)
 
-export const DatabaseID = "6865b340003474dd7214"
+export const DatabaseID = "6865b332001c4c913020"
 export const userCollectionID = "6865b340003474dd7214"
