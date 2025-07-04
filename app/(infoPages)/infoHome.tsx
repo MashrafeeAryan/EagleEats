@@ -126,8 +126,9 @@ const infoHome = () => {
               {showAgeComponent && (
                 <AgeComponent
                   showAgeComponent={showAgeComponent}
-                  setShowAgeComponent={setShowAgeComponent}
-                />
+                  setShowAgeComponent={setShowAgeComponent} 
+                  ageYears={ageYears} 
+                  setAgeYears={setAgeYears}                />
               )}
             </View>
 
@@ -147,8 +148,9 @@ const infoHome = () => {
               {showGenderComponent && (
                 <GenderComponent
                   showGenderComponent={showGenderComponent}
-                  setShowGenderComponent={setShowGenderComponent}
-                />
+                  setShowGenderComponent={setShowGenderComponent} 
+                  setGender={setGender}                
+                  />
               )}
             </View>
 
