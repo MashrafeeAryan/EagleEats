@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import WeightComponent from "@/components/WeightComponent";
 import HeightComponent from "@/components/HeightComponent";
 import AgeComponent from "@/components/AgeComponent";
+import { router } from "expo-router";
 import GenderComponent from "@/components/GenderComponent";
 import ActivityLevelComponent from "@/components/ActivityLevelComponent";
 import { useRouter } from "expo-router";
@@ -183,7 +184,9 @@ const infoHome = () => {
             <TouchableOpacity className="bg-black w-32 h-[50] items-center justify-center rounded-xl">
               <Text className="text-white font-bold text-xl">Skip</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="bg-black w-32 h-[50] items-center justify-center rounded-xl">
+            <TouchableOpacity className="bg-black w-32 h-[50] items-center justify-center rounded-xl" onPress={()=>{
+              router.push("setTarget");
+            }}>
               <Text className="text-white font-bold text-xl">Next</Text>
             </TouchableOpacity>
           </View>
