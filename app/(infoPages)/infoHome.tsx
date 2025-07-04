@@ -7,19 +7,48 @@ import WeightComponent from "@/components/WeightComponent";
 import HeightComponent from "@/components/HeightComponent";
 import AgeComponent from "@/components/AgeComponent";
 import { router } from "expo-router";
+import GenderComponent from "@/components/GenderComponent";
+import ActivityLevelComponent from "@/components/ActivityLevelComponent";
+import { useRouter } from "expo-router";
 
 const infoHome = () => {
+  const [showWeightComponent, setShowWeightComponent] = useState(false);
+  const [showHeightComponent, setShowHeightComponent] = useState(false);
+  const [showAgeComponent, setShowAgeComponent] = useState(false);
+  const [showGenderComponent, setShowGenderComponent] = useState(false);
+  const [showActivityLevelComponent, setShowActivityLevelComponent] =
+    useState(false);
 
-  const [showWeightComponent, setShowWeightComponent] = useState(false)
-  const [showHeightComponent, setShowHeightComponent] = useState(false)
-  const [showAgeComponent, setShowAgeComponent] = useState(false)
+  //Store Weights
+  const [weight_KG, setWeight_KG] = useState("");
+  const [weight_lbs, setWeight_lbs] = useState("");
+
+  //Store Height
+  const [heightInches, setHeightInches] = useState("");
+  const [heightCM, setHeightCM] = useState("");
+
+  //Store Age
+  const [ageYears, setAgeYears] = useState("");
+
+  //Store Gender
+  const [gender, setGender] = useState("");
+
+  //Store Activity Level
+  const [activityLevel, setActivityLevel] = useState("");
+
+  const router = useRouter();
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white flex-1">
       <ScrollView>
         <View className="items-center">
-          <View className="absolute top-4 left-4">
+          <TouchableOpacity
+            className="absolute top-4 left-4"
+            onPress={() => {
+              router.back();
+            }}
+          >
             <Ionicons name="arrow-back" size={24} color="black" />
-          </View>
+          </TouchableOpacity>
 
           <View className="mt-3">
             <Image
@@ -34,9 +63,10 @@ const infoHome = () => {
 
           <View className="w-full p-7">
             <View className="bg-white p-3 w-full rounded-xl">
-              <TouchableOpacity className="flex-row space-x-5 items-center"
-                onPress={()=>{
-                  setShowWeightComponent(true)
+              <TouchableOpacity
+                className="flex-row space-x-5 items-center"
+                onPress={() => {
+                  setShowWeightComponent(true);
                 }}
               >
                 <Image
@@ -45,11 +75,23 @@ const infoHome = () => {
                 />
                 <Text className="font-bold text-2xl">Weight</Text>
               </TouchableOpacity>
-              {showWeightComponent && <WeightComponent showWeightComponent={showWeightComponent} setShowWeightComponent={setShowWeightComponent}/>}
+              {showWeightComponent && (
+                <WeightComponent
+                  showWeightComponent={showWeightComponent}
+                  setShowWeightComponent={setShowWeightComponent}
+                  setWeight_KG={setWeight_KG}
+                  setWeight_lbs={setWeight_lbs}
+                  weight_KG={weight_KG}
+                  weight_lbs={weight_lbs}
+                />
+              )}
             </View>
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center"
-              onPress={()=>{setShowHeightComponent(true)}}
+              <TouchableOpacity
+                className="flex-row space-x-5 items-center"
+                onPress={() => {
+                  setShowHeightComponent(true);
+                }}
               >
                 <Image
                   source={infoPageLogos.HeightScaleLogo}
@@ -57,12 +99,24 @@ const infoHome = () => {
                 />
                 <Text className="font-bold text-2xl">Height</Text>
               </TouchableOpacity>
-              {showHeightComponent && <HeightComponent showHeightComponent={showHeightComponent} setShowHeightComponent={setShowHeightComponent} />}
+              {showHeightComponent && (
+                <HeightComponent
+                  showHeightComponent={showHeightComponent}
+                  setShowHeightComponent={setShowHeightComponent}
+                  setHeightInches={setHeightInches}
+                  setHeightCM={setHeightCM}
+                  heightInches={heightInches}
+                  heightCM={heightCM}
+                />
+              )}
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center"
-              onPress={()=>{setShowAgeComponent(true)}}
+              <TouchableOpacity
+                className="flex-row space-x-5 items-center"
+                onPress={() => {
+                  setShowAgeComponent(true);
+                }}
               >
                 <Image
                   source={infoPageLogos.ageLogo}
@@ -70,27 +124,56 @@ const infoHome = () => {
                 />
                 <Text className="font-bold text-2xl">Age</Text>
               </TouchableOpacity>
-              {showAgeComponent && <AgeComponent showAgeComponent={showAgeComponent} setShowAgeComponent={setShowAgeComponent} />}
+              {showAgeComponent && (
+                <AgeComponent
+                  showAgeComponent={showAgeComponent}
+                  setShowAgeComponent={setShowAgeComponent} 
+                  ageYears={ageYears} 
+                  setAgeYears={setAgeYears}                />
+              )}
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center">
+              <TouchableOpacity
+                className="flex-row space-x-5 items-center"
+                onPress={() => {
+                  setShowGenderComponent(true);
+                }}
+              >
                 <Image
                   source={infoPageLogos.genderLogo}
                   style={{ width: 60, height: 60 }}
                 />
                 <Text className="font-bold text-2xl">Gender</Text>
               </TouchableOpacity>
+              {showGenderComponent && (
+                <GenderComponent
+                  showGenderComponent={showGenderComponent}
+                  setShowGenderComponent={setShowGenderComponent} 
+                  setGender={setGender}                
+                  />
+              )}
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center">
+              <TouchableOpacity
+                className="flex-row space-x-5 items-center"
+                onPress={() => {
+                  setShowActivityLevelComponent(true);
+                }}
+              >
                 <Image
                   source={infoPageLogos.actvityLogo}
                   style={{ width: 60, height: 60 }}
                 />
                 <Text className="font-bold text-2xl">Activity Level</Text>
               </TouchableOpacity>
+              {showActivityLevelComponent && (
+                <ActivityLevelComponent
+                  showActivityLevelComponent={showActivityLevelComponent}
+                  setShowActivityLevelComponent={setShowActivityLevelComponent}
+                />
+              )}
             </View>
           </View>
 

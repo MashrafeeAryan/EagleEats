@@ -4,15 +4,18 @@ import {
   TextInput,
   TouchableOpacity,
   Pressable,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
+import { useUser } from "@/hooks/useUser";
 
-export default function SignUpScreen() {
+export default function  SignUpScreen() {
   // Input Fields
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,7 +39,93 @@ export default function SignUpScreen() {
 
   const router = useRouter();
 
+  const {register} = useUser()
+  const [error, setError] = useState()
+
+
+  // to remove the error message as soon as the user corrects the error being thrown
+  useEffect(() => {
+  switch (error) {
+    case "Full name is required.":
+      if (username.trim()) setError(null);
+      break;
+    case "Email is required.":
+      if (email.trim()) setError(null);
+      break;
+    case "Password is required.":
+      if (password.trim()) setError(null);
+      break;
+    case "Please retype your password.":
+      if (rePassword.trim()) setError(null);
+      break;
+    case "Passwords do not match.":
+      if (password === rePassword) setError(null);
+      break;
+    case "Please select your gender.":
+      if (selectedGender) setError(null);
+      break;
+    case "Please select your birth date.":
+      if (birthDate) setError(null);
+      break;
+    case "You must agree to the Terms and Conditions.":
+      if (agreed) setError(null);
+      break;
+    default:
+      // Handle password strength error
+      if (
+        error?.startsWith("Password must") &&
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&^_-])[A-Za-z\d@$!%*?#&^_-]{8,}$/.test(
+          password
+        )
+      ) {
+        setError(null);
+      }
+      break;
+  }
+  }, [ error, username, email, password, rePassword, selectedGender, birthDate, agreed,]);
+
+
+
+  const handleSignUp = async () => {
+    setError(null);
+
+    // Validate required fields
+    if (!username.trim()) return setError("Full name is required.");
+    if (!email.trim()) return setError("Email is required.");
+    if (!password.trim()) return setError("Password is required.");
+    if (!rePassword.trim()) return setError("Please retype your password.");
+    if (password !== rePassword) return setError("Passwords do not match.");
+    if (!selectedGender) return setError("Please select your gender.");
+    if (!birthDate) return setError("Please select your birth date.");
+    if (!agreed) return setError("You must agree to the Terms and Conditions.");
+
+    // Password strength check
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&^_-])[A-Za-z\d@$!%*?#&^_-]{8,}$/;
+    if (!strongPasswordRegex.test(password)) {
+      return setError(
+        "Password must be at least 8 characters, include uppercase, lowercase, number, and a special character."
+      );
+    }
+
+    try {
+    await register(email, password, username);
+    } catch (error) {
+    setError(error.message || "Something went wrong. Please try again.");
+    }
+  };
+
+  // for password strength check live feedback
+  const getPasswordCriteria = (password) => ({
+  length: password.length >= 8,
+  hasUppercase: /[A-Z]/.test(password),
+  hasLowercase: /[a-z]/.test(password),
+  hasNumber: /\d/.test(password),
+  hasSpecialChar: /[@$!%*?#&^_-]/.test(password),
+  });
+
+
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View className="flex-1 bg-gray-50 justify-center items-center px-6">
       <Text className="text-4xl font-extrabold text-gray-900 mb-[45px]">
         Sign Up
@@ -82,6 +171,32 @@ export default function SignUpScreen() {
           />
         </TouchableOpacity>
       </View>
+
+
+      {/* Live Password Strength Feedback */}
+      {password.length > 0 && (
+        <View className="w-full mb-3">
+          <Text className="text-xs text-gray-500">Password must include:</Text>
+          {Object.entries(getPasswordCriteria(password)).map(([key, passed]) => {
+            const labelMap = {
+              length: "• At least 8 characters",
+              hasUppercase: "• One uppercase letter",
+              hasLowercase: "• One lowercase letter",
+              hasNumber: "• One number",
+              hasSpecialChar: "• One special character (@$!%*?#&^_-)",
+            };
+            return (
+              <Text
+                key={key}
+                className={`text-xs ${passed ? "text-green-600" : "text-gray-500"}`}
+              >
+                {labelMap[key]}
+              </Text>
+            );
+          })}
+        </View>
+      )}
+
 
       {/* Retype Password Field */}
       <View className="w-full bg-white p-3 rounded-xl border border-gray-300 mb-2 flex-row items-center">
@@ -196,15 +311,19 @@ export default function SignUpScreen() {
           I agree to the Terms and Conditions
         </Text>
       </View>
+      
+      {/* Error message */}
+      {error && (<View className="pb-2 w-[100%]">
+        <Text className=" text-red-600 p-2 bg-red-200 border border-red-600 rounded-md">
+          {error}
+        </Text>
+      </View>)}
+
 
       {/* Create Account Button */}
       <TouchableOpacity
         className="w-full bg-gray-800 p-4 rounded-xl mb-4"
-        onPress={() =>
-          console.log(
-            `Signing In...with name:${username}, email:${email}, password:${password}, re-password${rePassword}, gender: ${selectedGender}, Birth Date: ${birthDate}, and Terms: ${agreed}`
-          )
-        }
+        onPress={handleSignUp}
       >
         <Text className="text-center text-white font-bold text-lg">
           Create your Account
@@ -221,5 +340,6 @@ export default function SignUpScreen() {
         </Text>
       </TouchableOpacity>
     </View>
+    </TouchableWithoutFeedback>
   );
 }

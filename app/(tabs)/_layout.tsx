@@ -8,6 +8,9 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Slot } from "expo-router";
 import { ActivityIndicator } from "react-native";
+import UserOnly from '../../components/auth/UserOnly';
+
+
 const TabsLayout = () => {
   const[loggedIn,setLoggedIn]=useState(false)
    useEffect(() => {
@@ -39,6 +42,7 @@ const TabsLayout = () => {
 
 
   return (
+    <UserOnly>
     <Tabs
       screenOptions={{
         tabBarStyle: {
@@ -218,6 +222,7 @@ const TabsLayout = () => {
         }}
       />
     </Tabs>
+    </UserOnly>
   );
 };
 

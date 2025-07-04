@@ -1,7 +1,9 @@
+import { UserProvider } from "@/context/UserContext";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
+    <UserProvider>
     <Stack>
       {/*Showns all the main pages inlcuding home */}
       <Stack.Screen
@@ -29,5 +31,6 @@ export default function RootLayout() {
       
       />
     </Stack>
+    </UserProvider>
   );
 }
