@@ -15,15 +15,37 @@ const infoHome = () => {
   const [showHeightComponent, setShowHeightComponent] = useState(false);
   const [showAgeComponent, setShowAgeComponent] = useState(false);
   const [showGenderComponent, setShowGenderComponent] = useState(false);
-  const [showActivityLevelComponent, setShowActivityLevelComponent] = useState(false);
-  
+  const [showActivityLevelComponent, setShowActivityLevelComponent] =
+    useState(false);
+
+  //Store Weights
+  const [weight_KG, setWeight_KG] = useState("");
+  const [weight_lbs, setWeight_lbs] = useState("");
+
+  //Store Height
+  const [heightInches, setHeightInches] = useState("");
+  const [heightCM, setHeightCM] = useState("");
+
+  //Store Age
+  const [ageYears, setAgeYears] = useState("");
+
+  //Store Gender
+  const [gender, setGender] = useState("");
+
+  //Store Activity Level
+  const [activityLevel, setActivityLevel] = useState("");
+
   const router = useRouter();
   return (
     <SafeAreaView className="bg-white flex-1">
       <ScrollView>
         <View className="items-center">
-          <TouchableOpacity className="absolute top-4 left-4"
-          onPress={()=>{router.back()}}>
+          <TouchableOpacity
+            className="absolute top-4 left-4"
+            onPress={() => {
+              router.back();
+            }}
+          >
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
 
@@ -56,6 +78,10 @@ const infoHome = () => {
                 <WeightComponent
                   showWeightComponent={showWeightComponent}
                   setShowWeightComponent={setShowWeightComponent}
+                  setWeight_KG={setWeight_KG}
+                  setWeight_lbs={setWeight_lbs}
+                  weight_KG={weight_KG}
+                  weight_lbs={weight_lbs}
                 />
               )}
             </View>
@@ -76,6 +102,10 @@ const infoHome = () => {
                 <HeightComponent
                   showHeightComponent={showHeightComponent}
                   setShowHeightComponent={setShowHeightComponent}
+                  setHeightInches={setHeightInches}
+                  setHeightCM={setHeightCM}
+                  heightInches={heightInches}
+                  heightCM={heightCM}
                 />
               )}
             </View>
@@ -123,7 +153,8 @@ const infoHome = () => {
             </View>
 
             <View className="bg-white p-3 w-full rounded-xl mt-4">
-              <TouchableOpacity className="flex-row space-x-5 items-center"
+              <TouchableOpacity
+                className="flex-row space-x-5 items-center"
                 onPress={() => {
                   setShowActivityLevelComponent(true);
                 }}
@@ -134,7 +165,12 @@ const infoHome = () => {
                 />
                 <Text className="font-bold text-2xl">Activity Level</Text>
               </TouchableOpacity>
-              {showActivityLevelComponent && <ActivityLevelComponent showActivityLevelComponent={showActivityLevelComponent} setShowActivityLevelComponent={setShowActivityLevelComponent}/>}
+              {showActivityLevelComponent && (
+                <ActivityLevelComponent
+                  showActivityLevelComponent={showActivityLevelComponent}
+                  setShowActivityLevelComponent={setShowActivityLevelComponent}
+                />
+              )}
             </View>
           </View>
 

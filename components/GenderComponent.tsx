@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { BlurView } from "expo-blur";
 import infoPageLogos from "@/assets/images/infoPageLogos";
 
-const GenderComponent = ({ showGenderComponent, setShowGenderComponent }) => {
+const GenderComponent = ({ showGenderComponent, setShowGenderComponent, setGender }) => {
   return (
     <Modal visible={showGenderComponent}
       transparent={true}
@@ -23,17 +23,22 @@ const GenderComponent = ({ showGenderComponent, setShowGenderComponent }) => {
           <View className="bg-white w-full h-15 mt-2 rounded-xl flex-row p-3 items-center space-x-3">
             {/* Left side: lbs */}
             <View className="flex-row items-center space-x-2">
-              <TouchableOpacity className="bg-[#DDDDDD] p-2 w-[70] rounded-xl items-center" >
+              <TouchableOpacity className="bg-[#DDDDDD] p-2 w-[70] rounded-xl items-center" 
+              onPress={()=>{handleGenderInput("Male")}}>
                 <Text className="font-bold text-lg">Male</Text>
               </TouchableOpacity>
             </View>
             <View className="flex-row items-center space-x-2">
-              <TouchableOpacity className="bg-[#DDDDDD] p-2 w-[80] rounded-xl items-center" >
+              <TouchableOpacity className="bg-[#DDDDDD] p-2 w-[80] rounded-xl items-center"
+                            onPress={()=>{handleGenderInput("Female")}}>
+ 
                 <Text className="font-bold text-lg">Female</Text>
               </TouchableOpacity>
             </View>
             <View className="flex-row items-center space-x-2">
-              <TouchableOpacity className="bg-[#DDDDDD] p-2 w-[70] rounded-xl items-center" >
+              <TouchableOpacity className="bg-[#DDDDDD] p-2 w-[70] rounded-xl items-center" 
+                                          onPress={()=>{handleGenderInput("Other")}}>
+
                 <Text className="font-bold text-lg">Other</Text>
               </TouchableOpacity>
             </View>
