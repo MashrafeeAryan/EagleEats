@@ -4,6 +4,9 @@ import { BlurView } from "expo-blur";
 import infoPageLogos from "@/assets/images/infoPageLogos";
 
 const GenderComponent = ({ showGenderComponent, setShowGenderComponent, setGender }) => {
+  const handleGenderInput = (genderType:string) => {
+    setGender(genderType)
+  }
   return (
     <Modal visible={showGenderComponent}
       transparent={true}
