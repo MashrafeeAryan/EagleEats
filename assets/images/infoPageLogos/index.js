@@ -29,3 +29,4 @@ export default {
   // Header Image for Preferences Screen
   preferences_allergies_top: require("./allergies_top.png"),
 };
+
