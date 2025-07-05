@@ -1,4 +1,5 @@
 export default {
+  // Activity & User Info Logos
   actvityLogo: require("./activityLogo.png"),
   ageLogo: require("./ageLogo.png"),
   genderLogo: require("./genderLogo.png"),
@@ -16,4 +17,15 @@ export default {
   sesame_allergy: require("./sesame.png"),
   tree_nuts_allergy: require("./Treenuts.png"),
   shellfish_allergy: require("./shellfish.png"),
+
+  // Dietary Preference Icons
+  halal: require("./halal.png"),
+  vegetarian: require("./vegetarian.png"),
+  vegan: require("./vegan.png"),
+  gluten: require("./gluten.png"),
+  no_beef: require("./beef.png"),
+  keto: require("./keto.png"),
+
+  // Header Image for Preferences Screen
+  preferences_allergies_top: require("./allergies_top.png"),
 };
