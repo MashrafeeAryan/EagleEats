@@ -5,7 +5,7 @@ import { UserContext } from '@/context/UserContext'
 
 const updateHealthInfo = async ({weight_KG, weight_lbs, heightInches, heightCM, ageYears, activityLevel, gender}) => {
     const {userID} = useContext(UserContext)    
-    databases.createDocument(
+    await databases.createDocument(
             DatabaseID,
             userHealthInfoCollectionID,
             userID, 
@@ -16,12 +16,13 @@ const updateHealthInfo = async ({weight_KG, weight_lbs, heightInches, heightCM, 
                 heightInch: heightInches,
                 age: ageYears, 
                 gender: gender, 
-                activityLevel: activityLevel
+                activityLevel: activityLevel,
+                heightCM: heightCM
             }
 
 
         )
-    }
 }
+
 
 export default updateHealthInfo
